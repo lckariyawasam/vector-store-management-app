@@ -1,21 +1,29 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { AppContext } from '../../context/AppContext';
+import './styles.css';
 
-import './styles.css'
-
-const BACKEND_URL = "http://localhost:5000/upload"
+const BACKEND_URL = "http://localhost:5000/upload";
 
 function Dashboard() {
+  const {
+    selectedProvider,
+    vectorDBAPIKey,
+    collectionName,
+    embeddingModel,
+    embeddingModelAPIKey
+  } = useContext(AppContext);
+
   const [selectedFile, setSelectedFile] = useState(null);
   const [description, setDescription] = useState('');
   const [uploadStatus, setUploadStatus] = useState(null);
   const [uploadMessage, setUploadMessage] = useState('');
   const [chunkingParameter, setChunkingParameter] = useState('sentence');
 
-  const onDrop = useCallback(acceptedFiles => {
+  const onDrop = useCallback((acceptedFiles) => {
     setSelectedFile(acceptedFiles[0]);
-    setUploadMessage("");
-    setUploadStatus("")
+    setUploadMessage('');
+    setUploadStatus('');
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
@@ -32,6 +40,12 @@ function Dashboard() {
     const formData = new FormData();
     formData.append('description', description);
     formData.append('file', selectedFile);
+    formData.append('selectedProvider', selectedProvider);
+    formData.append('vectorDBAPIKey', vectorDBAPIKey);
+    formData.append('collectionName', collectionName);
+    formData.append('embeddingModel', embeddingModel);
+    formData.append('embeddingModelAPIKey', embeddingModelAPIKey);
+    formData.append('chunkingParameter', chunkingParameter);
 
     setUploadStatus('uploading');
     setUploadMessage('Uploading...');
@@ -71,9 +85,9 @@ function Dashboard() {
             <p>Drop the files here ...</p>
           ) : (
             <p>Drag 'n' drop some files here, or <u>click here</u> to select files</p>
-          ): ""}
+          ) : ""}
           {selectedFile && (
-             <p><b>Selected File:</b> {selectedFile.name}</p>
+            <p><b>Selected File:</b> {selectedFile.name}</p>
           )}
         </div>
 

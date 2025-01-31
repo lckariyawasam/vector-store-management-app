@@ -1,24 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './App.css';
-
-import SetupPage from './pages/SetupPage'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AppProvider } from './context/AppContext';
+import SetupPage from './pages/SetupPage';
 import Dashboard from './pages/Dashboard';
 import Header from './common/Header';
-import { BrowserRouter, Routes, Route } from "react-router";
 
 function App() {
   return (
-    <div>
-      <Header/>
+    <AppProvider>
+      <Header />
       <div className='container'>
-      <BrowserRouter>
-        <Routes>
-          <Route path='/' element={<SetupPage />} />
-          <Route path='/dashboard' element={<Dashboard/>} />
-        </Routes>
-      </BrowserRouter>
+        <BrowserRouter>
+          <Routes>
+            <Route path='/' element={<SetupPage />} />
+            <Route path='/dashboard' element={<Dashboard />} />
+          </Routes>
+        </BrowserRouter>
       </div>
-    </div>
+    </AppProvider>
   );
 }
 
