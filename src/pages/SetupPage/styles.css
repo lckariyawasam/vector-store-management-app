@@ -54,3 +54,24 @@ label {
     background-color: #ff7300;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
+  .required-indicator {
+    border: 1px solid red; /* Example: Red border */
+    /* Or any other visual indicator you prefer */
+    /* Add a pseudo-element for a more distinct indicator */
+    position: relative; /* Needed for positioning the pseudo-element */
+  }
+  
+  .required-indicator::after {
+    content: "*"; /* Or any other symbol */
+    position: absolute;
+    top: -8px; /* Adjust as needed */
+    right: -8px; /* Adjust as needed */
+    color: red;
+    font-size: 16px; /* Adjust as needed */
+  }
+
+  .setup-form-button:disabled {
+    background-color: #ddd;
+    cursor: default;
+}
