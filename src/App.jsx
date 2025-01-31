@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './App.css';
 
 import SetupPage from './pages/SetupPage'
+import Dashboard from './pages/Dashboard';
 import Header from './common/Header';
 
 function App() {
@@ -9,7 +10,8 @@ function App() {
     <div>
       <Header/>
       <div className='container'>
-        <SetupPage></SetupPage>
+        {/* <SetupPage></SetupPage> */}
+        <Dashboard/>
       </div>
     </div>
   );
