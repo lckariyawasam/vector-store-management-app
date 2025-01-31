@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './styles.css'
+import { useNavigate } from 'react-router-dom'
 
 function SetupPage() {
   const [selectedProvider, setSelectedProvider] = useState("");
@@ -7,6 +8,8 @@ function SetupPage() {
   const [collectionName, setCollectionName] = useState("")
   const [embeddingModel, setEmbeddingModel] = useState("")
   const [embeddingModelAPIKey, setEmbeddingModelAPIKey] = useState("")
+
+  const navigate = useNavigate()
 
   return (
     <div className="vector-db-configs setup-form">
@@ -56,7 +59,7 @@ function SetupPage() {
             />
           </div>
         </div>
-        <button className='setup-form-button'>Next</button>
+        <button onClick={() => navigate("/dashboard")} className='setup-form-button'>Next</button>
       </div>
     </div>
   );
