@@ -1,9 +1,11 @@
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useState, useCallback, useContext, useEffect } from 'react';
+import './styles.css'
 import { useDropzone } from 'react-dropzone';
 import { AppContext } from '../../context/AppContext';
-import { Button, Typography, Paper, Box, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Button, Typography, Paper, Box, Select, MenuItem, FormControl, InputLabel, Grid, TextField } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
-const BACKEND_URL = "http://localhost:8290/upload";
+const BACKEND_URL = "http://localhost:5000/upload";
 
 function NewDashboard() {
   const {
@@ -19,12 +21,15 @@ function NewDashboard() {
   const [uploadMessage, setUploadMessage] = useState('');
   const [chunkingParameter, setChunkingParameter] = useState('sentence');
 
-  const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
-  const [showRequiredIndicators, setShowRequiredIndicators] = useState(false);
+  const navigate = useNavigate();
 
   const onDrop = useCallback((acceptedFiles) => {
     setSelectedFile(acceptedFiles[0]);
   }, []);
+
+  useEffect(() => {
+    selectedFile && setUploadMessage("")
+  }, [selectedFile])
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
@@ -75,13 +80,69 @@ function NewDashboard() {
   };
 
   return (
-    <Box m={5}>
+    <>
+    <Box mt={5}>
         <Paper>
-            <Box p={10}>
-                <Typography variant="h4" gutterBottom>
+            <Box px={10} pt={3} sx={{display: "flex", flexDirection: "column", justifyItems: "center"}}>
+                <Typography m={1} variant="h4" gutterBottom>
+                    Vector Store Settings
+                </Typography>
+                <Box mt={3} sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "20px"}}>
+                    <Grid xs={12}>
+                        <FormControl fullWidth>
+                            <InputLabel id="selected-provider-label">Vector Database Provider</InputLabel>
+                            <Select
+                            value={selectedProvider}
+                            disabled
+                            label="Vector Database Provider"
+                            labelId="selected-provider-label"
+
+                            >
+                            <MenuItem value="PineconeDB">Pinecone DB</MenuItem>
+                            <MenuItem value="ChromaDB">Chroma</MenuItem>
+                            <MenuItem value="Weviate">Weviate</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12}>
+                    <TextField
+                        label="Collection Name"
+                        value={collectionName}
+                        disabled
+                        fullWidth
+                    />
+                    </Grid>
+                    <Grid item xs={12}>
+                    <FormControl fullWidth>
+                        <InputLabel id="embedding-model-label">Embedding Model</InputLabel>
+                        <Select
+                        value={embeddingModel}
+                        disabled
+                        labelId='embedding-model-label'
+                        label='Embedding Model'
+                        >
+                        <MenuItem value="SENTENCE_TRANSFORM">Sentence Transform</MenuItem>
+                        <MenuItem value="OPENAI">OpenAI</MenuItem>
+                        <MenuItem value="MODEL2">Azure OpenAI</MenuItem>
+                        </Select>
+                    </FormControl>
+                    </Grid>
+                    <Grid item xs={12}>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => {navigate("/")}}
+                    >
+                        Edit
+                    </Button>
+                    </Grid>
+                </Box>
+    </Box>
+            <Box px={10} py={5}>
+                <Typography mx={1} mb={3} variant="h4" gutterBottom>
                 Add files to vector store
                 </Typography>
-                <Box {...getRootProps()} border={1} borderRadius={4} mb={2} p={8} textAlign="center" minWidth="400px">
+                <Box {...getRootProps()} className={`dropzone ${isDragActive || selectedFile ? 'active' : ''}`} border={1} borderRadius={4} mb={2} p={8} textAlign="center" minWidth="400px">
                 <input {...getInputProps()} />
                 <Typography variant="body1">
                 {!selectedFile ? isDragActive ? (
@@ -94,7 +155,7 @@ function NewDashboard() {
                 )}
                 </Typography>
                 </Box>
-                <FormControl fullWidth required error={showRequiredIndicators && !chunkingParameter}>
+                <FormControl fullWidth >
                     <InputLabel id="selected-provider-label">Chunking Parameter</InputLabel>
                     <Select
                     value={chunkingParameter}
@@ -112,19 +173,19 @@ function NewDashboard() {
                     variant="contained"
                     color="primary"
                     onClick={handleSubmit}
-                    disabled={!selectedFile}
                     >
                     Upload
                     </Button>
                 </Box>
                 {uploadStatus && (
-                <Typography variant="body1" color={uploadStatus === 'success' ? 'green' : 'red'}>
+                <Typography variant="body1" mt={1} color={uploadStatus === 'success' ? 'green' : 'red'}>
                     {uploadMessage}
                 </Typography>
                 )}
             </Box>
         </Paper>
     </Box>
+    </>
 
   );
 }
