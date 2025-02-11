@@ -21,7 +21,7 @@ function NewDashboard() {
   const [uploadMessage, setUploadMessage] = useState('');
   const [chunkingStrategy, setChunkingStrategy] = useState('recursive');
   const [maxSegmentSize, setMaxSegmentSize] = useState(1000);
-  const [minSegmentSize, setMinSegmentSize] = useState(200);
+  const [maxOverlapSize, setMaxOverlapSize] = useState(200);
 
   const navigate = useNavigate();
 
@@ -60,7 +60,7 @@ function NewDashboard() {
     formData.append('embeddingModelAPIKey', embeddingModelAPIKey);
     formData.append('chunkingStrategy', chunkingStrategy);
     formData.append('maxSegmentSize', maxSegmentSize);
-    formData.append('minSegmentSize', minSegmentSize);
+    formData.append('minSegmentSize', maxOverlapSize);
 
     setUploadStatus('uploading');
     setUploadMessage('Uploading...');
@@ -196,10 +196,10 @@ function NewDashboard() {
                 <Box my={2}>
                   <FormControl fullWidth >
                       <TextField
-                      value={minSegmentSize}
+                      value={maxOverlapSize}
                       type='number'
-                      label="Min Segment Size"
-                      onChange={(e) => setMinSegmentSize(e.target.value)}
+                      label="Max Overlap Size"
+                      onChange={(e) => setMaxOverlapSize(e.target.value)}
                       >
                       </TextField>
                   </FormControl>
