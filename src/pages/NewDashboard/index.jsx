@@ -19,7 +19,9 @@ function NewDashboard() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadStatus, setUploadStatus] = useState(null);
   const [uploadMessage, setUploadMessage] = useState('');
-  const [chunkingParameter, setChunkingParameter] = useState('sentence');
+  const [chunkingStrategy, setChunkingStrategy] = useState('recursive');
+  const [maxSegmentSize, setMaxSegmentSize] = useState(1000);
+  const [minSegmentSize, setMinSegmentSize] = useState(200);
 
   const navigate = useNavigate();
 
@@ -49,7 +51,9 @@ function NewDashboard() {
     formData.append('collectionName', collectionName);
     formData.append('embeddingModel', embeddingModel);
     formData.append('embeddingModelAPIKey', embeddingModelAPIKey);
-    formData.append('chunkingParameter', chunkingParameter);
+    formData.append('chunkingStrategy', chunkingStrategy);
+    formData.append('maxSegmentSize', maxSegmentSize);
+    formData.append('minSegmentSize', minSegmentSize);
 
     setUploadStatus('uploading');
     setUploadMessage('Uploading...');
@@ -137,7 +141,7 @@ function NewDashboard() {
                     </Button>
                     </Grid>
                 </Box>
-    </Box>
+            </Box>
             <Box px={10} py={5}>
                 <Typography mx={1} mb={3} variant="h4" gutterBottom>
                 Add files to vector store
@@ -155,19 +159,45 @@ function NewDashboard() {
                 )}
                 </Typography>
                 </Box>
-                <FormControl fullWidth >
-                    <InputLabel id="selected-provider-label">Chunking Parameter</InputLabel>
-                    <Select
-                    value={chunkingParameter}
-                    onChange={(e) => setChunkingParameter(e.target.value)}
-                    label="Chunking Parameter"
-                    labelId="selected-provider-label"
-                    >
-                        <MenuItem value="sentence">Sentence</MenuItem>
-                        <MenuItem value="line">Line</MenuItem>
-                        <MenuItem value="paragraph">Paragraph</MenuItem>
-                    </Select>
-                </FormControl>
+                <Box my={2}>
+                  <FormControl fullWidth >
+                      <InputLabel id="chunking-stragtey-label">Chunking Strategy</InputLabel>
+                      <Select
+                      value={chunkingStrategy}
+                      onChange={(e) => setChunkingStrategy(e.target.value)}
+                      label="Chunking Strategy"
+                      labelId="chunking-stragtey-label"
+                      >
+                          <MenuItem value="recursive">Recursive (Default)</MenuItem>
+                          <MenuItem value="sentence">By Sentence</MenuItem>
+                          <MenuItem value="paragraph">By Paragraph</MenuItem>
+                      </Select>
+                  </FormControl>
+                </Box>
+                <Box my={2}>
+                  <FormControl fullWidth >
+                      <TextField
+                      value={maxSegmentSize}
+                      type='number'
+                      label="Max Segment Size"
+                      onChange={(e) => setMaxSegmentSize(e.target.value)}
+                      >
+                      </TextField>
+                  </FormControl>
+                </Box>
+
+                <Box my={2}>
+                  <FormControl fullWidth >
+                      <TextField
+                      value={minSegmentSize}
+                      type='number'
+                      label="Min Segment Size"
+                      onChange={(e) => setMinSegmentSize(e.target.value)}
+                      >
+                      </TextField>
+                  </FormControl>
+                </Box>
+
                 <Box mt={2}>
                     <Button
                     variant="contained"
