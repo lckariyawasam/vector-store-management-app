@@ -5,7 +5,7 @@ import { AppContext } from '../../context/AppContext';
 import { Button, Typography, Paper, Box, Select, MenuItem, FormControl, InputLabel, Grid, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-const BACKEND_URL = "http://localhost:5000/upload";
+const BACKEND_URL = "http://localhost:8290/upload";
 
 function NewDashboard() {
   const {
@@ -28,6 +28,13 @@ function NewDashboard() {
   const onDrop = useCallback((acceptedFiles) => {
     setSelectedFile(acceptedFiles[0]);
   }, []);
+
+  // Return to setup screen if details are missing
+  useEffect(() => {
+    if (selectedProvider === "" || embeddingModel === "" || collectionName === "") {
+      navigate("/")
+    }
+  }, [])
 
   useEffect(() => {
     selectedFile && setUploadMessage("")
