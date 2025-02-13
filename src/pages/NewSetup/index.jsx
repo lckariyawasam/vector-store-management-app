@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Button, TextField, Grid, Typography, Paper, Box, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../../context/AppContext';
@@ -15,7 +15,23 @@ function SetupPage() {
   const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
   const [showRequiredIndicators, setShowRequiredIndicators] = useState(false);
 
+  const initialState = useRef({
+    selectedProvider,
+    vectorDBAPIKey,
+    collectionName,
+    embeddingModel,
+    embeddingModelAPIKey
+  })
+
   const navigate = useNavigate();
+
+  const resetValues = () => {
+    setSelectedProvider(initialState.current.selectedProvider);
+    setVectorDBAPIKey(initialState.current.vectorDBAPIKey);
+    setCollectionName(initialState.current.collectionName);
+    setEmbeddingModel(initialState.current.embeddingModel);
+    setEmbeddingModelAPIKey(initialState.current.embeddingModelAPIKey);
+  }
 
   useEffect(() => {
     const isVectorDBSettingsValid = selectedProvider && vectorDBAPIKey && collectionName;
@@ -84,9 +100,9 @@ function SetupPage() {
                         labelId='embedding-model-label'
                         label='Embedding Model'
                         >
-                        <MenuItem value="SENTENCE_TRANSFORM">Sentence Transform</MenuItem>
                         <MenuItem value="OPENAI">OpenAI</MenuItem>
                         <MenuItem value="MODEL2">Azure OpenAI</MenuItem>
+                        <MenuItem value="SENTENCE_TRANSFORM">Sentence Transform</MenuItem>
                         </Select>
                     </FormControl>
                     </Grid>
@@ -102,16 +118,24 @@ function SetupPage() {
                         />
                     </Grid>
                     )}
-                    <Grid item xs={12}>
-                    <Button
+                    <Box mt={1}>
+                        <Button
                         variant="contained"
                         color="primary"
                         onClick={handleNext}
                         disabled={isNextButtonDisabled}
-                    >
+                        sx={{marginRight: "10px"}}
+                        >
                         Next
-                    </Button>
-                    </Grid>
+                        </Button>
+                        <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={resetValues}
+                        >
+                        Reset
+                      </Button>
+                    </Box>
                 </Box>
             </Box>
         </Paper>
