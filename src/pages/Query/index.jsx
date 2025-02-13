@@ -155,7 +155,7 @@ function QueryPage() {
                       variant="contained"
                       color="secondary"
                       onClick={() => {navigate("/dashboard")}}
-                    >Add to this store</Button>
+                    >Add to store</Button>
                 </Box>
                 <Box>
                 {returnedText.length > 0 &&
