@@ -22,11 +22,17 @@ function NewDashboard() {
   const [chunkingStrategy, setChunkingStrategy] = useState('Recursive');
   const [maxSegmentSize, setMaxSegmentSize] = useState(1000);
   const [maxOverlapSize, setMaxOverlapSize] = useState(200);
+  const [isInputFile, setIsInputFile] = useState(true);
+  const [inputText, setInputText] = useState("");
+  const [fileType, setFileType] = useState("text");
 
   const navigate = useNavigate();
 
   const onDrop = useCallback((acceptedFiles) => {
-    setSelectedFile(acceptedFiles[0]);
+    const file = acceptedFiles[0];
+    setSelectedFile(file);
+    const fileExtension = file.name.split('.').pop();
+    setFileType(fileExtension);
   }, []);
 
   // Return to setup screen if details are missing
@@ -40,19 +46,50 @@ function NewDashboard() {
     selectedFile && setUploadMessage("")
   }, [selectedFile])
 
+  useEffect(() => {
+    console.log(fileType);
+  }, [fileType])
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+
+  const handleTextChange = (event) => {
+    const text = event.target.value;
+    setInputText(text);
+  }
+
+  const handleInputTypeChange = () => {
+    setInputText("")
+    if (isInputFile) {
+      setFileType("text");
+    } else {
+      setFileType("")
+      setSelectedFile(null)
+    }
+    setIsInputFile(!isInputFile);
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!selectedFile) {
+    if ((!selectedFile && isInputFile)) {
       setUploadStatus('error');
       setUploadMessage('Please select a file.');
+      return;
+    } else if (inputText === "" && !isInputFile) {
+      setUploadStatus('error');
+      setUploadMessage('Please add a text input');
+      return;
+    } else if (fileType != "pdf" && fileType != "text" && fileType != "markdown" && fileType !="xls" && fileType != "xlsx" && fileType != "doc" && fileType != "docx" && fileType != "ppt" && fileType != "pptx" && fileType != "html") {
+      setUploadStatus('error');
+      setUploadMessage('File type not supported')
       return;
     }
 
     const formData = new FormData();
+    formData.append('isFile', isInputFile);
     formData.append('file', selectedFile);
+    formData.append('fileType', fileType);
+    formData.append('inputText', inputText);
     formData.append('selectedProvider', selectedProvider);
     formData.append('vectorDBAPIKey', vectorDBAPIKey);
     formData.append('collectionName', collectionName);
@@ -151,21 +188,42 @@ function NewDashboard() {
             </Box>
             <Box px={10} py={5}>
                 <Typography mx={1} mb={3} variant="h4" gutterBottom>
-                Add files to vector store
+                Add data to vector store
                 </Typography>
-                <Box {...getRootProps()} className={`dropzone ${isDragActive || selectedFile ? 'active' : ''}`} border={1} borderRadius={4} mb={2} p={8} textAlign="center" minWidth="400px">
-                <input {...getInputProps()} />
-                <Typography variant="body1">
-                {!selectedFile ? isDragActive ? (
-                    <p>Drop the files here ...</p>
-                ) : (
-                    <p>Drag 'n' drop some files here, or <u>click here</u> to select files</p>
-                ) : ""}
-                {selectedFile && (
-                    <p><b>Selected File:</b> {selectedFile.name}</p>
-                )}
+                {
+                  isInputFile ?
+                  <Box {...getRootProps()} className={`dropzone ${isDragActive || selectedFile ? 'active' : ''}`} border={1} borderRadius={2} mb={2} p={8} textAlign="center" minWidth="400px">
+                  <input {...getInputProps()} />
+                  <Typography variant="body1">
+                  {!selectedFile ? isDragActive ? (
+                      <p>Drop the files here ...</p>
+                  ) : (
+                      <p>Drag 'n' drop some files here, or <u>click here</u> to select files</p>
+                  ) : ""}
+                  {selectedFile && (
+                      <p><b>Selected File:</b> {selectedFile.name}</p>
+                  )}
+                  </Typography>
+                  </Box>
+                  :
+                  <Box mb={2}>
+                    <FormControl fullWidth>
+                      <TextField
+                          placeholder="Add your text here"
+                          value={inputText}
+                          multiline
+                          rows={7}
+                          onChange={handleTextChange}
+                        />
+                    </FormControl>
+                  </Box>
+                }
+                <Typography 
+                  sx={{textAlign: "right", cursor: "pointer" }} 
+                  onClick={handleInputTypeChange}
+                >
+                  <u>{isInputFile? "Or add plain text" : "Or upload file"} </u>
                 </Typography>
-                </Box>
                 <Box my={2}>
                   <FormControl fullWidth >
                       <InputLabel id="chunking-stragtey-label">Chunking Strategy</InputLabel>
