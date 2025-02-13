@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppProvider } from './context/AppContext';
 import NewDashboard from './pages/NewDashboard';
 import NewSetup from './pages/NewSetup'
+import QueryPage from './pages/Query';
 import Header from './common/Header';
 
 import { themeSettings } from "./theme";
@@ -56,6 +57,7 @@ function App() {
             <Routes>
               <Route path='/' element={<NewSetup />}/>
               <Route path='/dashboard' element={<NewDashboard />} />
+              <Route path='/query' element={<QueryPage />} />
             </Routes>
           </BrowserRouter>
         </div>

@@ -1,13 +1,11 @@
 import React, { useState, useCallback, useContext, useEffect } from 'react';
-import './styles.css'
-import { useDropzone } from 'react-dropzone';
 import { AppContext } from '../../context/AppContext';
 import { Button, Typography, Paper, Box, Select, MenuItem, FormControl, InputLabel, Grid, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-const BACKEND_URL = "http://localhost:8290/upload";
+const BACKEND_URL = "http://localhost:8290/retrieve";
 
-function NewDashboard() {
+function QueryPage() {
   const {
     selectedProvider,
     vectorDBAPIKey,
@@ -16,60 +14,41 @@ function NewDashboard() {
     embeddingModelAPIKey
   } = useContext(AppContext);
 
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [uploadStatus, setUploadStatus] = useState(null);
+  const [retrieving, setRetrieve] = useState(null);
   const [uploadMessage, setUploadMessage] = useState('');
-  const [chunkingStrategy, setChunkingStrategy] = useState('Recursive');
-  const [maxSegmentSize, setMaxSegmentSize] = useState(1000);
-  const [maxOverlapSize, setMaxOverlapSize] = useState(200);
+  const [userQuery, setUserQuery] = useState("");
+  const [returnedText, setReturnedText] = useState([])
 
   const navigate = useNavigate();
 
-  const onDrop = useCallback((acceptedFiles) => {
-    setSelectedFile(acceptedFiles[0]);
-  }, []);
-
-  // Return to setup screen if details are missing
+  //Return to setup screen if details are missing
   useEffect(() => {
     if (selectedProvider === "" || embeddingModel === "" || collectionName === "") {
       navigate("/")
     }
   }, [])
 
-  useEffect(() => {
-    selectedFile && setUploadMessage("")
-  }, [selectedFile])
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!selectedFile) {
-      setUploadStatus('error');
-      setUploadMessage('Please select a file.');
-      return;
-    }
+    setRetrieve('retrieving');
+    setUploadMessage('');
+
+    setReturnedText([]);
 
     const formData = new FormData();
-    formData.append('file', selectedFile);
     formData.append('selectedProvider', selectedProvider);
     formData.append('vectorDBAPIKey', vectorDBAPIKey);
     formData.append('collectionName', collectionName);
     formData.append('embeddingModel', embeddingModel);
     formData.append('embeddingModelAPIKey', embeddingModelAPIKey);
-    formData.append('chunkingStrategy', chunkingStrategy);
-    formData.append('maxSegmentSize', maxSegmentSize);
-    formData.append('maxOverlapSize', maxOverlapSize);
-
-    setUploadStatus('uploading');
-    setUploadMessage('Uploading...');
+    formData.append('query', userQuery);
 
     try {
       const response = await fetch(BACKEND_URL, {
         method: 'POST',
-        body: formData,
-      });
+        body: formData
+      })
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -77,22 +56,21 @@ function NewDashboard() {
       }
 
       const data = await response.json();
-      setUploadStatus('success');
-      setUploadMessage('File uploaded successfully!');
-      console.log('File uploaded successfully:', data);
-
-      setSelectedFile(null);
+      setReturnedText(data)
+      setRetrieve(false);
+      setUploadMessage("");
+      console.log('Retrieved text!:', data);
 
     } catch (error) {
       console.error('Error uploading file:', error);
-      setUploadStatus('error');
-      setUploadMessage(`File upload failed: ${error.message}`);
+      setRetrieve(false);
+      setUploadMessage(`Retrieving failed. Error: ${error.message}`);
     }
   };
 
   return (
     <>
-    <Box mt={5}>
+    <Box mt={5} sx={{ display: "block", width: '100%', maxWidth: '800px', overflow: 'auto' }}>
         <Paper>
             <Box px={10} pt={3} sx={{display: "flex", flexDirection: "column", justifyItems: "center"}}>
                 <Typography m={1} variant="h4" gutterBottom>
@@ -107,7 +85,6 @@ function NewDashboard() {
                             disabled
                             label="Vector Database Provider"
                             labelId="selected-provider-label"
-
                             >
                             <MenuItem value="PineconeDB">Pinecone DB</MenuItem>
                             <MenuItem value="ChromaDB">Chroma</MenuItem>
@@ -150,56 +127,15 @@ function NewDashboard() {
                 </Box>
             </Box>
             <Box px={10} py={5}>
-                <Typography mx={1} mb={3} variant="h4" gutterBottom>
-                Add files to vector store
+                <Typography m={1} variant="p" gutterBottom>
+                    Get the most similar entries from the vector store
                 </Typography>
-                <Box {...getRootProps()} className={`dropzone ${isDragActive || selectedFile ? 'active' : ''}`} border={1} borderRadius={4} mb={2} p={8} textAlign="center" minWidth="400px">
-                <input {...getInputProps()} />
-                <Typography variant="body1">
-                {!selectedFile ? isDragActive ? (
-                    <p>Drop the files here ...</p>
-                ) : (
-                    <p>Drag 'n' drop some files here, or <u>click here</u> to select files</p>
-                ) : ""}
-                {selectedFile && (
-                    <p><b>Selected File:</b> {selectedFile.name}</p>
-                )}
-                </Typography>
-                </Box>
-                <Box my={2}>
-                  <FormControl fullWidth >
-                      <InputLabel id="chunking-stragtey-label">Chunking Strategy</InputLabel>
-                      <Select
-                      value={chunkingStrategy}
-                      onChange={(e) => setChunkingStrategy(e.target.value)}
-                      label="Chunking Strategy"
-                      labelId="chunking-stragtey-label"
-                      >
-                          <MenuItem value="Recursive">Recursive (Default)</MenuItem>
-                          <MenuItem value="BySentence">By Sentence</MenuItem>
-                          <MenuItem value="ByParagraph">By Paragraph</MenuItem>
-                      </Select>
-                  </FormControl>
-                </Box>
                 <Box my={2}>
                   <FormControl fullWidth >
                       <TextField
-                      value={maxSegmentSize}
-                      type='number'
-                      label="Max Segment Size"
-                      onChange={(e) => setMaxSegmentSize(e.target.value)}
-                      >
-                      </TextField>
-                  </FormControl>
-                </Box>
-
-                <Box my={2}>
-                  <FormControl fullWidth >
-                      <TextField
-                      value={maxOverlapSize}
-                      type='number'
-                      label="Max Overlap Size"
-                      onChange={(e) => setMaxOverlapSize(e.target.value)}
+                      value={userQuery}
+                      label="Query"
+                      onChange={(e) => setUserQuery(e.target.value)}
                       >
                       </TextField>
                   </FormControl>
@@ -210,23 +146,33 @@ function NewDashboard() {
                     variant="contained"
                     color="primary"
                     onClick={handleSubmit}
+                    disabled={retrieving}
                     sx={{marginRight: "10px"}}
                     >
-                    Upload
+                    {retrieving ?  "Retrieving" : "Retrieve"}
                     </Button>
                     <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => {navigate("/query")}}
-                    >
-                    Retrieve from this store
-                  </Button>
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => {navigate("/dashboard")}}
+                    >Add to this store</Button>
                 </Box>
-                {uploadStatus && (
-                <Typography variant="body1" mt={1} color={uploadStatus === 'success' ? 'green' : 'red'}>
-                    {uploadMessage}
-                </Typography>
-                )}
+                <Box>
+                {returnedText.length > 0 &&
+                <Box mt={5}> 
+                  <Typography my={1} variant="h3" gutterBottom>
+                      Most similar entries from the vector store
+                  </Typography>
+                </Box>
+                }
+                <ul>
+                  {
+                    returnedText.map((emb, index) => (
+                          <li key={index}>{emb.embedded.text}</li>
+                    ))
+                  }
+                </ul>
+                </Box>
             </Box>
         </Paper>
     </Box>
@@ -235,4 +181,4 @@ function NewDashboard() {
   );
 }
 
-export default NewDashboard;
+export default QueryPage;
