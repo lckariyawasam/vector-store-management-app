@@ -39,8 +39,22 @@ function SetupPage() {
     setIsNextButtonDisabled(!(isVectorDBSettingsValid && isEmbeddingSettingsValid));
   }, [selectedProvider, vectorDBAPIKey, collectionName, embeddingModel, embeddingModelAPIKey]);
 
+
+  useEffect(() => {
+    setSelectedProvider(localStorage.getItem("selectedProvider"));
+    setVectorDBAPIKey(localStorage.getItem("vectorDBAPIKey"));
+    setCollectionName(localStorage.getItem("collectionName"));
+    setEmbeddingModel(localStorage.getItem("embeddingModel"));
+    setEmbeddingModelAPIKey(localStorage.getItem("embeddingModelAPIKey"));
+  }, [])
+
   const handleNext = () => {
     if (!isNextButtonDisabled) {
+      localStorage.setItem("selectedProvider", selectedProvider)
+      localStorage.setItem("vectorDBAPIKey", vectorDBAPIKey)
+      localStorage.setItem("collectionName", collectionName)
+      localStorage.setItem("embeddingModel", embeddingModel)
+      localStorage.setItem("embeddingModelAPIKey", embeddingModelAPIKey)
       navigate('/dashboard');
     } else {
       setShowRequiredIndicators(true);
