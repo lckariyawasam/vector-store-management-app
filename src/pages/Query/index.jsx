@@ -76,7 +76,11 @@ function QueryPage() {
       }
 
       const data = await response.json();
-      setReturnedText(data)
+      if (data.length > 0) {
+        setReturnedText(data)
+      } else {
+        window.alert("No chunks found for given inputs. Try reducing the minimum similarity threshold")
+      }
       setRetrieve(false);
       setUploadMessage("");
       console.log('Retrieved text!:', data);
