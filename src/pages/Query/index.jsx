@@ -87,8 +87,7 @@ function QueryPage() {
                             labelId="selected-provider-label"
                             >
                             <MenuItem value="PineconeDB">Pinecone DB</MenuItem>
-                            <MenuItem value="ChromaDB">Chroma</MenuItem>
-                            <MenuItem value="Weviate">Weviate</MenuItem>
+                            <MenuItem disabled value="PostgreSQL">PostgreSQL</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>
@@ -109,9 +108,10 @@ function QueryPage() {
                         labelId='embedding-model-label'
                         label='Embedding Model'
                         >
-                        <MenuItem value="SENTENCE_TRANSFORM">Sentence Transform</MenuItem>
-                        <MenuItem value="OPENAI">OpenAI</MenuItem>
-                        <MenuItem value="MODEL2">Azure OpenAI</MenuItem>
+                        <MenuItem value="OPEN_AI">OpenAI</MenuItem>
+                        <MenuItem value="AZURE_OPEN_AI">Azure OpenAI</MenuItem>
+                        <MenuItem value="ANTHROPIC">Anthropic</MenuItem>
+                        <MenuItem value="MISTRAL_AI">Mistral</MenuItem>
                         </Select>
                     </FormControl>
                     </Grid>
