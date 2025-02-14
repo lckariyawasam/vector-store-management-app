@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Button, TextField, Grid, Typography, Paper, Box, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Button, TextField, Grid, Typography, Paper, Box, Select, MenuItem, FormControl, InputAdornment, IconButton, InputLabel } from '@mui/material';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../../context/AppContext';
 
@@ -14,6 +16,8 @@ function SetupPage() {
 
   const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
   const [showRequiredIndicators, setShowRequiredIndicators] = useState(false);
+  const [showDBApiKey, setShowDBApiKey] = useState(false);
+  const [showEmbeddingModelApiKey, setShowEmbeddingModelApiKey] = useState(false);
 
   const initialState = useRef({
     selectedProvider,
@@ -91,7 +95,20 @@ function SetupPage() {
                         onChange={(e) => setVectorDBAPIKey(e.target.value)}
                         fullWidth
                         required
+                        type={ showDBApiKey ? 'text' : 'password'}
                         error={showRequiredIndicators && !vectorDBAPIKey}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                onClick={() => {setShowDBApiKey(!showDBApiKey)}}
+                                edge="end"
+                              >
+                                {showDBApiKey ? <VisibilityOff /> : <Visibility />}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
                     />
                     </Grid>
                     <Grid item xs={12}>
@@ -129,6 +146,19 @@ function SetupPage() {
                         fullWidth
                         required
                         error={showRequiredIndicators && !embeddingModelAPIKey}
+                        type={ showEmbeddingModelApiKey ? 'text' : 'password'}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                onClick={() => {setShowEmbeddingModelApiKey(!showEmbeddingModelApiKey)}}
+                                edge="end"
+                              >
+                                {showEmbeddingModelApiKey ? <VisibilityOff /> : <Visibility />}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
                         />
                     </Grid>
                     )}
