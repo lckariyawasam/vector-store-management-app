@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 const BACKEND_URL = "http://localhost:8290/upload";
 
-function NewDashboard() {
+function UploadPage() {
   const {
     selectedProvider,
     vectorDBAPIKey,
@@ -79,7 +79,7 @@ function NewDashboard() {
       setUploadStatus('error');
       setUploadMessage('Please add a text input');
       return;
-    } else if (fileType != "pdf" && fileType != "text" && fileType != "markdown" && fileType !="xls" && fileType != "xlsx" && fileType != "doc" && fileType != "docx" && fileType != "ppt" && fileType != "pptx" && fileType != "html") {
+    } else if (fileType !== "pdf" && fileType !== "text" && fileType !== "markdown" && fileType !=="xls" && fileType !== "xlsx" && fileType !== "doc" && fileType !== "docx" && fileType !== "ppt" && fileType !== "pptx" && fileType !== "html") {
       setUploadStatus('error');
       setUploadMessage('File type not supported')
       return;
@@ -293,4 +293,4 @@ function NewDashboard() {
   );
 }
 
-export default NewDashboard;
+export default UploadPage;

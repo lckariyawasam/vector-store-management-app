@@ -2,8 +2,8 @@ import React, { useState, useMemo} from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppProvider } from './context/AppContext';
-import NewDashboard from './pages/NewDashboard';
-import NewSetup from './pages/NewSetup'
+import UploadPage from './pages/UploadPage';
+import SetupPage from './pages/SetupPage'
 import QueryPage from './pages/Query';
 import Header from './common/Header';
 
@@ -55,8 +55,8 @@ function App() {
         }}>
           <BrowserRouter>
             <Routes>
-              <Route path='/' element={<NewSetup />}/>
-              <Route path='/dashboard' element={<NewDashboard />} />
+              <Route path='/' element={<SetupPage />}/>
+              <Route path='/dashboard' element={<UploadPage />} />
               <Route path='/query' element={<QueryPage />} />
             </Routes>
           </BrowserRouter>
