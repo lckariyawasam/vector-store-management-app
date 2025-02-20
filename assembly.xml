@@ -28,13 +28,13 @@
             </includes>
         </fileSet>
 
-        <!-- Optionally, include additional files here
+        <!-- Include the MI Instance Car App -->
         <fileSet>
-            <directory>src/main/webapp</directory>
-            <outputDirectory>/webapp</outputDirectory>
+            <directory>mi-vector-store/target/</directory>
+            <outputDirectory>/</outputDirectory> <!-- Place it in /lib directory in the zip -->
             <includes>
-                <include>**/*</include>
+                <include>*.car</include> <!-- Name of the web server JAR -->
             </includes>
-        </fileSet> -->
+        </fileSet>
     </fileSets>
 </assembly>
