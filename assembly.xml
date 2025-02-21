@@ -31,9 +31,18 @@
         <!-- Include the MI Instance Car App -->
         <fileSet>
             <directory>mi-vector-store/target/</directory>
+            <outputDirectory>/</outputDirectory>
+            <includes>
+                <include>*.car</include> 
+            </includes>
+        </fileSet>
+
+        <!-- Include the run script -->
+        <fileSet>
+            <directory>./</directory>
             <outputDirectory>/</outputDirectory> <!-- Place it in /lib directory in the zip -->
             <includes>
-                <include>*.car</include> <!-- Name of the web server JAR -->
+                <include>*.sh</include>
             </includes>
         </fileSet>
     </fileSets>
