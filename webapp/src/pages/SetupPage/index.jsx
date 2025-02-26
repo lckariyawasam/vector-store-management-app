@@ -11,7 +11,8 @@ function SetupPage() {
     vectorDBAPIKey, setVectorDBAPIKey,
     collectionName, setCollectionName,
     embeddingModel, setEmbeddingModel,
-    embeddingModelAPIKey, setEmbeddingModelAPIKey
+    embeddingModelAPIKey, setEmbeddingModelAPIKey,
+    chromaURL, setChromaURL
   } = useContext(AppContext);
 
   const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
@@ -24,7 +25,8 @@ function SetupPage() {
     vectorDBAPIKey,
     collectionName,
     embeddingModel,
-    embeddingModelAPIKey
+    embeddingModelAPIKey,
+    chromaURL
   })
 
   const navigate = useNavigate();
@@ -38,10 +40,10 @@ function SetupPage() {
   }
 
   useEffect(() => {
-    const isVectorDBSettingsValid = selectedProvider && vectorDBAPIKey && collectionName;
-    const isEmbeddingSettingsValid = embeddingModel && (embeddingModel === "SENTENCE_TRANSFORM" || embeddingModelAPIKey);
+    const isVectorDBSettingsValid = selectedProvider && ((selectedProvider === "PineconeDB" && vectorDBAPIKey) || (selectedProvider === "ChromaDB" && chromaURL)) && collectionName;
+    const isEmbeddingSettingsValid = embeddingModel && embeddingModelAPIKey;
     setIsNextButtonDisabled(!(isVectorDBSettingsValid && isEmbeddingSettingsValid));
-  }, [selectedProvider, vectorDBAPIKey, collectionName, embeddingModel, embeddingModelAPIKey]);
+  }, [selectedProvider, vectorDBAPIKey, collectionName, embeddingModel, embeddingModelAPIKey, chromaURL]);
 
 
   useEffect(() => {
@@ -50,6 +52,7 @@ function SetupPage() {
     setCollectionName(localStorage.getItem("collectionName"));
     setEmbeddingModel(localStorage.getItem("embeddingModel"));
     setEmbeddingModelAPIKey(localStorage.getItem("embeddingModelAPIKey"));
+    setChromaURL(localStorage.getItem("chromaURL"));
   }, [])
 
   const handleNext = () => {
@@ -59,6 +62,7 @@ function SetupPage() {
       localStorage.setItem("collectionName", collectionName)
       localStorage.setItem("embeddingModel", embeddingModel)
       localStorage.setItem("embeddingModelAPIKey", embeddingModelAPIKey)
+      localStorage.setItem("chromaURL", chromaURL)
       navigate('/dashboard');
     } else {
       setShowRequiredIndicators(true);
@@ -84,10 +88,12 @@ function SetupPage() {
 
                             >
                             <MenuItem value="PineconeDB">Pinecone DB</MenuItem>
+                            <MenuItem value="ChromaDB">Chroma DB</MenuItem>
                             <MenuItem disabled value="PostgreSQL">PostgreSQL</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>
+                    {selectedProvider === "PineconeDB" && 
                     <Grid item xs={12}>
                     <TextField
                         label="Vector DB API Key"
@@ -111,6 +117,19 @@ function SetupPage() {
                         }}
                     />
                     </Grid>
+                    }
+                    {selectedProvider==="ChromaDB" &&
+                    <Grid item xs={12}>
+                    <TextField
+                        label="Chroma Host URL"
+                        value={chromaURL}
+                        onChange={(e) => setChromaURL(e.target.value)}
+                        fullWidth
+                        required
+                        error={showRequiredIndicators && !collectionName}
+                    />
+                    </Grid>
+                    }
                     <Grid item xs={12}>
                     <TextField
                         label="Collection Name"

@@ -8,6 +8,7 @@ export const AppProvider = ({ children }) => {
   const [collectionName, setCollectionName] = useState("");
   const [embeddingModel, setEmbeddingModel] = useState("");
   const [embeddingModelAPIKey, setEmbeddingModelAPIKey] = useState("");
+  const [chromaURL, setChromaURL] = useState("");
 
   return (
     <AppContext.Provider value={{
@@ -20,7 +21,9 @@ export const AppProvider = ({ children }) => {
       embeddingModel,
       setEmbeddingModel,
       embeddingModelAPIKey,
-      setEmbeddingModelAPIKey
+      setEmbeddingModelAPIKey,
+      chromaURL,
+      setChromaURL
     }}>
       {children}
     </AppContext.Provider>

@@ -13,7 +13,8 @@ function UploadPage() {
     vectorDBAPIKey,
     collectionName,
     embeddingModel,
-    embeddingModelAPIKey
+    embeddingModelAPIKey,
+    chromaURL
   } = useContext(AppContext);
 
   const [selectedFile, setSelectedFile] = useState(null);
@@ -92,6 +93,7 @@ function UploadPage() {
     formData.append('inputText', inputText);
     formData.append('selectedProvider', selectedProvider);
     formData.append('vectorDBAPIKey', vectorDBAPIKey);
+    formData.append('chromaURL', chromaURL)
     formData.append('collectionName', collectionName);
     formData.append('embeddingModel', embeddingModel);
     formData.append('embeddingModelAPIKey', embeddingModelAPIKey);
@@ -147,6 +149,7 @@ function UploadPage() {
 
                             >
                             <MenuItem value="PineconeDB">Pinecone DB</MenuItem>
+                            <MenuItem value="ChromaDB">Chroma DB</MenuItem>
                             <MenuItem disabled value="PostgreSQL">PostgreSQL</MenuItem>
                             </Select>
                         </FormControl>

@@ -111,6 +111,7 @@ function QueryPage() {
                             labelId="selected-provider-label"
                             >
                             <MenuItem value="PineconeDB">Pinecone DB</MenuItem>
+                            <MenuItem value="ChromaDB">Chroma DB</MenuItem>
                             <MenuItem disabled value="PostgreSQL">PostgreSQL</MenuItem>
                             </Select>
                         </FormControl>
