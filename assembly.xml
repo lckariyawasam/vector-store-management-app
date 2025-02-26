@@ -12,7 +12,7 @@
 
     <fileSets>
         <fileSet>
-            <directory>webapp/build</directory> <!-- Path to React build output -->
+            <directory>webapp/dist</directory> <!-- Path to React build output -->
             <outputDirectory>/server/www/</outputDirectory>
             <includes>
                 <include>**/*</include>
