@@ -7,11 +7,16 @@
     <groupId>com.example</groupId>
     <artifactId>my-project</artifactId>
     <version>0.1.0</version>
+    <packaging>pom</packaging>
 
     <properties>
         <node.version>v22.13.1</node.version>  <!-- Version of Node.js -->
         <npm.version>10.9.2</npm.version>      <!-- Version of npm -->
     </properties>
+
+    <modules>
+        <module>mi-vector-store</module>
+    </modules>
 
     <dependencies>
         <dependency>
@@ -25,6 +30,27 @@
     <build>
         <plugins>
             <!-- Plugin to install Node.js and npm -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase> <!-- Runs before the clean phase -->
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>mvn</executable>
+                            <workingDirectory>${project.basedir}/mi-vector-store</workingDirectory>
+                            <arguments>
+                                <argument>clean</argument>
+                                <argument>install</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
