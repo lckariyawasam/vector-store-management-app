@@ -11,7 +11,8 @@ function QueryPage() {
     vectorDBAPIKey,
     collectionName,
     embeddingModel,
-    embeddingModelAPIKey
+    embeddingModelAPIKey,
+    chromaURL
   } = useContext(AppContext);
 
   const [retrieving, setRetrieve] = useState(null);
@@ -60,8 +61,9 @@ function QueryPage() {
     formData.append('collectionName', collectionName);
     formData.append('embeddingModel', embeddingModel);
     formData.append('embeddingModelAPIKey', embeddingModelAPIKey);
-    formData.append("maxChunks", maxChunks);
-    formData.append("minSimilarity", minSimilarity)
+    formData.append('chromaURL', chromaURL)
+    formData.append('maxChunks', maxChunks);
+    formData.append('minSimilarity', minSimilarity)
     formData.append('query', userQuery);
 
     try {

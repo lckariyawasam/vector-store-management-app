@@ -16,6 +16,27 @@
             <log category="INFO">
                 <message>${vars.ai_generateEmbeddings_678.payload}</message>
             </log>
+            <switch source="${payload.mediate.selectedProvider.$}">
+                <case regex="PineconeDB">
+                    <ai.searchStore configKey="pinecone_with_form_input_2">
+                        <input>{${vars.ai_generateEmbeddings_678.payload[0].embedding}}</input>
+                        <maxResults>{${payload.mediate.maxChunks.$}}</maxResults>
+                        <minScore>{${payload.mediate.minSimilarity.$}}</minScore>
+                        <responseVariable>ai_searchStore_242</responseVariable>
+                        <overwriteBody>false</overwriteBody>
+                    </ai.searchStore>
+                </case>
+                <case regex="ChromaDB">
+                    <ai.searchStore configKey="chromadb_local_connection">
+                        <input>{${vars.ai_generateEmbeddings_678.payload[0].embedding}}</input>
+                        <maxResults>{${payload.mediate.maxChunks.$}}</maxResults>
+                        <minScore>{${payload.mediate.minSimilarity.$}}</minScore>
+                        <responseVariable>ai_searchStore_242</responseVariable>
+                        <overwriteBody>false</overwriteBody>
+                    </ai.searchStore>
+                </case>
+                <default></default>
+            </switch>
             <ai.searchStore configKey="pinecone_with_form_input_2">
                 <input>{${vars.ai_generateEmbeddings_678.payload[0].embedding}}</input>
                 <maxResults>{${payload.mediate.maxChunks.$}}</maxResults>
