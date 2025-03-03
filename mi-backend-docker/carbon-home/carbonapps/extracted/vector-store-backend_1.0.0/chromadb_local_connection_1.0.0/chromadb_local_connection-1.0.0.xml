@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<localEntry key="chromadb_local_connection" xmlns="http://ws.apache.org/ns/synapse">
+  <ai.init>
+    <connectionType>CHROMA_DB</connectionType>
+    <url>{${payload.mediate.chromaURL.$}}</url>
+    <collection>WSO2MI</collection>
+    <name>chromadb_local_connection</name>
+  </ai.init>
+</localEntry>

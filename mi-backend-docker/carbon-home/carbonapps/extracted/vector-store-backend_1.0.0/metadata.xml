@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?><artifacts>
+    <artifact name="vector-store-backend" version="1.0.0" type="carbon/application">
+        <dependency artifact="vectorstore" version="1.0.0" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="pinecone_with_form_input_2" version="1.0.0" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="chromadb_local_connection" version="1.0.0" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="chroma_with_form_connection" version="1.0.0" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="openai_connection_3" version="1.0.0" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="ai-connector-0.1.0" version="SNAPSHOT" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="config" version="1.0.0" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="mi-connector-file" version="4.0.34" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="mi-connector-ai-0.1.0" version="SNAPSHOT" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="langchain4j-anthropic-1.0.0-alpha1" version="1.0.0" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="langchain4j-mistral-ai-1.0.0-alpha1" version="1.0.0" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="postgresql-42.7.4" version="1.0.0" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="langchain4j-azure-open-ai-1.0.0-alpha1" version="1.0.0" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="jsoup-1.18.3" version="1.0.0" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="langchain4j-document-parser-apache-poi-1.0.0-alpha1" version="1.0.0" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="fontbox-2.0.32" version="1.0.0" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="langchain4j-1.0.0-alpha1" version="1.0.0" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="flexmark-all-0.64.8" version="1.0.0" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="langchain4j-core-1.0.0-alpha1" version="1.0.0" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="langchain4j-pgvector-1.0.0-alpha1" version="1.0.0" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="opennlp-tools-1.9.4" version="1.0.0" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="langchain4j-chroma-1.0.0-alpha1.wso2v1" version="1.0.0" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="converter-jackson-2.9.0" version="1.0.0" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="jtokkit-1.1.0" version="1.0.0" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="pgvector-0.1.6" version="1.0.0" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="langchain4j-document-parser-apache-pdfbox-1.0.0-alpha1" version="1.0.0" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="langchain4j-open-ai-1.0.0-alpha1" version="1.0.0" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="okhttp-sse-4.12.0" version="1.0.0" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="langchain4j-pinecone-1.0.0-alpha1.wso2v1" version="1.0.0" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="openai4j-0.25.0" version="1.0.0" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="pdfbox-2.0.32" version="1.0.0" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="vectorstore_metadata" version="1.0.0" include="true" serverRole="EnterpriseIntegrator"/>
+        <dependency artifact="vectorstore_swagger" version="1.0.0" include="true" serverRole="EnterpriseIntegrator"/>
+    </artifact>
+</artifacts>

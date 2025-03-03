@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/" name="vectorstore" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="POST" uri-template="/retrieve">
+        <inSequence>
+            <log category="INFO">
+                <message>${payload}</message>
+            </log>
+            <ai.generateEmbeddings configKey="openai_connection_3">
+                <input>{${payload.mediate.query.$}}</input>
+                <model>text-embedding-3-small</model>
+                <responseVariable>ai_generateEmbeddings_678</responseVariable>
+                <overwriteBody>false</overwriteBody>
+            </ai.generateEmbeddings>
+
+
+            <log category="INFO">
+                <message>${vars.ai_generateEmbeddings_678.payload}</message>
+            </log>
+            <switch source="${payload.mediate.selectedProvider.$}">
+                <case regex="PineconeDB">
+                    <ai.searchStore configKey="pinecone_with_form_input_2">
+                        <input>{${vars.ai_generateEmbeddings_678.payload[0].embedding}}</input>
+                        <maxResults>{${payload.mediate.maxChunks.$}}</maxResults>
+                        <minScore>{${payload.mediate.minSimilarity.$}}</minScore>
+                        <responseVariable>ai_searchStore_242</responseVariable>
+                        <overwriteBody>false</overwriteBody>
+                    </ai.searchStore>
+                </case>
+                <case regex="ChromaDB">
+                    <ai.searchStore configKey="chromadb_local_connection">
+                        <input>{${vars.ai_generateEmbeddings_678.payload[0].embedding}}</input>
+                        <maxResults>{${payload.mediate.maxChunks.$}}</maxResults>
+                        <minScore>{${payload.mediate.minSimilarity.$}}</minScore>
+                        <responseVariable>ai_searchStore_242</responseVariable>
+                        <overwriteBody>false</overwriteBody>
+                    </ai.searchStore>
+                </case>
+                <default></default>
+            </switch>
+            <ai.searchStore configKey="pinecone_with_form_input_2">
+                <input>{${vars.ai_generateEmbeddings_678.payload[0].embedding}}</input>
+                <maxResults>{${payload.mediate.maxChunks.$}}</maxResults>
+                <minScore>{${payload.mediate.minSimilarity.$}}</minScore>
+                <responseVariable>ai_searchStore_242</responseVariable>
+                <overwriteBody>false</overwriteBody>
+            </ai.searchStore>
+
+
+            <payloadFactory media-type="json" template-type="default">
+                <format>${vars.ai_searchStore_242.payload}</format>
+            </payloadFactory>
+            <respond/>
+        </inSequence>
+        <faultSequence>
+        </faultSequence>
+    </resource>
+    <resource methods="POST" uri-template="/upload">
+        <inSequence>
+            <log category="INFO">
+                <message>${payload.mediate}</message>
+            </log>
+            <switch source="${payload.mediate.fileType.$}">
+                <case regex="pdf">
+                    <ai.parse>
+                        <input>{${payload.mediate.file.$}}</input>
+                        <type>pdf-to-text</type>
+                        <responseVariable>parser_output</responseVariable>
+                        <overwriteBody>false</overwriteBody>
+                    </ai.parse>
+                </case>
+                <case regex="text">
+                    <ai.parse>
+                        <input>{${payload.mediate.inputText.$}}</input>
+                        <type>markdown-to-text</type>
+                        <responseVariable>parser_output</responseVariable>
+                        <overwriteBody>false</overwriteBody>
+                    </ai.parse>
+                </case>
+                <case regex="xlsx">
+                    <ai.parse >
+                        <input >{${payload.mediate.file.$}}</input>
+                        <type >xlsx-to-text</type>
+                        <responseVariable >parser_output</responseVariable>
+                        <overwriteBody >false</overwriteBody>
+                    </ai.parse>
+                </case>
+                <case regex="xls">
+                    <ai.parse>
+                        <input>{${payload.mediate.file.$}}</input>
+                        <type>xls-to-text</type>
+                        <responseVariable>parser_output</responseVariable>
+                        <overwriteBody>false</overwriteBody>
+                    </ai.parse>
+                </case>
+                <case regex="pptx">
+                    <ai.parse>
+                        <input>{${payload.mediate.file.$}}</input>
+                        <type>pptx-to-text</type>
+                        <responseVariable>parser_output</responseVariable>
+                        <overwriteBody>false</overwriteBody>
+                    </ai.parse>
+                </case>
+                <case regex="ppt">
+                    <ai.parse>
+                        <input>{${payload.mediate.file.$}}</input>
+                        <type>ppt-to-text</type>
+                        <responseVariable>parser_output</responseVariable>
+                        <overwriteBody>false</overwriteBody>
+                    </ai.parse>
+                    <log category="INFO">
+                        <message>Reached the point after PPT parsing</message>
+                    </log>
+                </case>
+        <default></default>
+            </switch>
+            <log category="INFO">
+                <message>${vars.parser_output.payload}</message>
+            </log>
+            <ai.split>
+                <input>{${vars.parser_output.payload}}</input>
+                <strategy>{${payload.mediate.chunkingStrategy.$}}</strategy>
+                <maxSegmentSize>{${payload.mediate.maxSegmentSize.$}}</maxSegmentSize>
+                <maxOverlapSize>{${payload.mediate.maxOverlapSize.$}}</maxOverlapSize>
+                <responseVariable>ai_split_20</responseVariable>
+                <overwriteBody>false</overwriteBody>
+            </ai.split>
+
+
+            <log category="INFO">
+                <message>${vars.ai_split_20.payload}</message>
+            </log>
+            <ai.generateEmbeddings configKey="openai_connection_3">
+                <input>{${vars.ai_split_20.payload}}</input>
+                <model>text-embedding-3-small</model>
+                <responseVariable>ai_generateEmbeddings_312</responseVariable>
+                <overwriteBody>false</overwriteBody>
+            </ai.generateEmbeddings>
+            <log category="INFO">
+                <message>${vars.ai_generateEmbeddings_312.payload}</message>
+            </log>
+            <switch source="${payload.mediate.selectedProvider.$}">
+                <case regex="ChromaDB" >
+                    <ai.addToStore configKey="chromadb_local_connection">
+                        <input>{${vars.ai_generateEmbeddings_312.payload}}</input>
+                        <responseVariable>ai_addToStore_705</responseVariable>
+                        <overwriteBody>false</overwriteBody>
+                    </ai.addToStore>
+                </case>
+                <case regex="PineconeDB">
+                    <ai.addToStore configKey="pinecone_with_form_input_2">
+                        <input>{${vars.ai_generateEmbeddings_312.payload}}</input>
+                        <responseVariable>ai_addToStore_326</responseVariable>
+                        <overwriteBody>false</overwriteBody>
+                    </ai.addToStore>
+                </case>
+                <default></default>
+            </switch>
+
+
+
+            <log category="INFO">
+                <message>${vars.ai_generateEmbeddings_312.payload}</message>
+            </log>
+            <payloadFactory media-type="json" template-type="default">
+                <format>{"message" : "Data succesfully added to vector store"}</format>
+            </payloadFactory>
+            <respond/>
+        </inSequence>
+        <faultSequence>
+        </faultSequence>
+    </resource>
+</api>

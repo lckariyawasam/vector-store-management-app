@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?><artifact name="pgvector-0.1.6" version="1.0.0" type="lib/connector/dependency" serverRole="EnterpriseIntegrator" connector="{org.wso2.carbon.esb.module}ai">
+    <file>pgvector-0.1.6.jar</file>
+</artifact>

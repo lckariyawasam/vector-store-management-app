@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<localEntry key="pinecone_with_form_input_2" xmlns="http://ws.apache.org/ns/synapse">
+  <ai.init>
+    <connectionType>PINECONE</connectionType>
+    <apiKey>{${payload.mediate.vectorDBAPIKey.$}}</apiKey>
+    <index>{${payload.mediate.collectionName.$}}</index>
+    <namespace>ai</namespace>
+    <cloud>AWS</cloud>
+    <region>us-east-1</region>
+    <dimension>1536</dimension>
+    <name>pinecone_with_form_input_2</name>
+  </ai.init>
+</localEntry>

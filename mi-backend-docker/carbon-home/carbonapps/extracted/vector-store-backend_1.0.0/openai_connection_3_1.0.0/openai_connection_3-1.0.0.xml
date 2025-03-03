@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<localEntry key="openai_connection_3" xmlns="http://ws.apache.org/ns/synapse">
+  <ai.init>
+    <connectionType>OPEN_AI</connectionType>
+    <apiKey>{${payload.mediate.embeddingModelAPIKey.$}}</apiKey>
+    <baseUrl>https://api.openai.com/v1</baseUrl>
+    <name>openai_connection_3</name>
+  </ai.init>
+</localEntry>
