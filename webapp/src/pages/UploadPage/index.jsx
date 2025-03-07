@@ -4,8 +4,9 @@ import { useDropzone } from 'react-dropzone';
 import { AppContext } from '../../context/AppContext';
 import { Button, Typography, Paper, Box, Select, MenuItem, FormControl, InputLabel, Grid, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 
-const BACKEND_URL = "http://localhost:8290/upload";
+const BACKEND_URL = "http://localhost:8000";
 
 function UploadPage() {
   const {
@@ -86,26 +87,49 @@ function UploadPage() {
       return;
     }
 
-    const formData = new FormData();
-    formData.append('isFile', isInputFile);
-    formData.append('file', selectedFile);
-    formData.append('fileType', fileType);
-    formData.append('inputText', inputText);
-    formData.append('selectedProvider', selectedProvider);
-    formData.append('vectorDBAPIKey', vectorDBAPIKey);
-    formData.append('chromaURL', chromaURL)
-    formData.append('collectionName', collectionName);
-    formData.append('embeddingModel', embeddingModel);
-    formData.append('embeddingModelAPIKey', embeddingModelAPIKey);
-    formData.append('chunkingStrategy', chunkingStrategy);
-    formData.append('maxSegmentSize', maxSegmentSize);
-    formData.append('maxOverlapSize', maxOverlapSize);
-
     setUploadStatus('uploading');
     setUploadMessage('Uploading...');
 
     try {
-      const response = await fetch(BACKEND_URL, {
+      const requestId = uuidv4();
+      const setupResponse = await fetch(`${BACKEND_URL}/setup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          request_id: requestId,
+          file_count: 1,
+          vectordb_provider: selectedProvider,
+          pinecone_apikey: vectorDBAPIKey,
+          chroma_url: chromaURL,
+          chroma_port: null,
+          postgres_host: null,
+          postgres_user: null,
+          postgres_password: null,
+          postgres_dbname: null,
+          postgres_table_name: null,
+          collection_name: collectionName,
+          embedding_model: embeddingModel,
+          embedding_model_apikey: embeddingModelAPIKey,
+          chunking_strategy: chunkingStrategy,
+          max_segment_size: maxSegmentSize,
+          max_overlap_size: maxOverlapSize,
+        }),
+      });
+
+      if (!setupResponse.ok) {
+        const errorText = await setupResponse.text();
+        throw new Error(`${setupResponse.status} - ${errorText || 'Setup request failed'}`);
+      } 
+
+      const setupData = await setupResponse.json();
+
+      const formData = new FormData();
+      formData.append('request_id', requestId);
+      formData.append('file', selectedFile);
+
+      const response = await fetch(`${BACKEND_URL}/upload`, {
         method: 'POST',
         body: formData,
       });
@@ -148,9 +172,9 @@ function UploadPage() {
                             labelId="selected-provider-label"
 
                             >
-                            <MenuItem value="PineconeDB">Pinecone DB</MenuItem>
-                            <MenuItem value="ChromaDB">Chroma DB</MenuItem>
-                            <MenuItem disabled value="PostgreSQL">PostgreSQL</MenuItem>
+                            <MenuItem value="pinecone">Pinecone DB</MenuItem>
+                            <MenuItem value="chroma">Chroma DB</MenuItem>
+                            <MenuItem disabled value="postgres">PostgreSQL</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>
@@ -171,8 +195,8 @@ function UploadPage() {
                         labelId='embedding-model-label'
                         label='Embedding Model'
                         >
-                        <MenuItem value="OPEN_AI">OpenAI</MenuItem>
-                        <MenuItem value="AZURE_OPEN_AI">Azure OpenAI</MenuItem>
+                        <MenuItem value="openai">OpenAI</MenuItem>
+                        <MenuItem value="AZURE_openai">Azure OpenAI</MenuItem>
                         <MenuItem value="ANTHROPIC">Anthropic</MenuItem>
                         <MenuItem value="MISTRAL_AI">Mistral</MenuItem>
                         </Select>

@@ -40,7 +40,7 @@ function SetupPage() {
   }
 
   useEffect(() => {
-    const isVectorDBSettingsValid = selectedProvider && ((selectedProvider === "PineconeDB" && vectorDBAPIKey) || (selectedProvider === "ChromaDB" && chromaURL)) && collectionName;
+    const isVectorDBSettingsValid = selectedProvider && ((selectedProvider === "pinecone" && vectorDBAPIKey) || (selectedProvider === "chroma" && chromaURL)) && collectionName;
     const isEmbeddingSettingsValid = embeddingModel && embeddingModelAPIKey;
     setIsNextButtonDisabled(!(isVectorDBSettingsValid && isEmbeddingSettingsValid));
   }, [selectedProvider, vectorDBAPIKey, collectionName, embeddingModel, embeddingModelAPIKey, chromaURL]);
@@ -87,13 +87,13 @@ function SetupPage() {
                             labelId="selected-provider-label"
 
                             >
-                            <MenuItem value="PineconeDB">Pinecone DB</MenuItem>
-                            <MenuItem value="ChromaDB">Chroma DB</MenuItem>
-                            <MenuItem disabled value="PostgreSQL">PostgreSQL</MenuItem>
+                            <MenuItem value="pinecone">Pinecone DB</MenuItem>
+                            <MenuItem value="chroma">Chroma DB</MenuItem>
+                            <MenuItem disabled value="postgres">PostgreSQL</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>
-                    {selectedProvider === "PineconeDB" && 
+                    {selectedProvider === "pinecone" && 
                     <Grid item xs={12}>
                     <TextField
                         label="Vector DB API Key"
@@ -118,7 +118,7 @@ function SetupPage() {
                     />
                     </Grid>
                     }
-                    {selectedProvider==="ChromaDB" &&
+                    {selectedProvider==="chroma" &&
                     <Grid item xs={12}>
                     <TextField
                         label="Chroma Host URL"
@@ -149,8 +149,8 @@ function SetupPage() {
                         labelId='embedding-model-label'
                         label='Embedding Model'
                         >
-                          <MenuItem value="OPEN_AI">OpenAI</MenuItem>
-                          <MenuItem disabled value="AZURE_OPEN_AI">Azure OpenAI</MenuItem>
+                          <MenuItem value="openai">OpenAI</MenuItem>
+                          <MenuItem disabled value="AZURE_openai">Azure OpenAI</MenuItem>
                           <MenuItem disabled value="ANTHROPIC">Anthropic</MenuItem>
                           <MenuItem disabled value="MISTRAL_AI">Mistral</MenuItem>
                         </Select>

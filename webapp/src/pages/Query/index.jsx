@@ -112,9 +112,9 @@ function QueryPage() {
                             label="Vector Database Provider"
                             labelId="selected-provider-label"
                             >
-                            <MenuItem value="PineconeDB">Pinecone DB</MenuItem>
-                            <MenuItem value="ChromaDB">Chroma DB</MenuItem>
-                            <MenuItem disabled value="PostgreSQL">PostgreSQL</MenuItem>
+                              <MenuItem value="pinecone">Pinecone DB</MenuItem>
+                              <MenuItem value="chroma">Chroma DB</MenuItem>
+                              <MenuItem disabled value="postgres">PostgreSQL</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>
@@ -135,8 +135,8 @@ function QueryPage() {
                         labelId='embedding-model-label'
                         label='Embedding Model'
                         >
-                        <MenuItem value="OPEN_AI">OpenAI</MenuItem>
-                        <MenuItem value="AZURE_OPEN_AI">Azure OpenAI</MenuItem>
+                        <MenuItem value="openai">OpenAI</MenuItem>
+                        <MenuItem value="AZURE_openai">Azure OpenAI</MenuItem>
                         <MenuItem value="ANTHROPIC">Anthropic</MenuItem>
                         <MenuItem value="MISTRAL_AI">Mistral</MenuItem>
                         </Select>
